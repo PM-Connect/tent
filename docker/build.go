@@ -11,11 +11,11 @@ func (b *DefaultDocker) BuildImage(name string, context string, tags []string, b
 	args := []string{"build"}
 
 	if len(target) > 0 {
-		args = append(args, fmt.Sprintf("--target=\"%s\"", target))
+		args = append(args, fmt.Sprintf("--target=%s", target))
 	}
 
 	for _, tag := range tags {
-		args = append(args, fmt.Sprintf("--tag=\"%s\"", tag))
+		args = append(args, fmt.Sprintf("--tag=%s", tag))
 	}
 
 	for arg, value := range buildArgs {
@@ -23,11 +23,11 @@ func (b *DefaultDocker) BuildImage(name string, context string, tags []string, b
 	}
 
 	if len(cacheFrom) > 0 {
-		args = append(args, fmt.Sprintf("--cache-from=\"%s\"", cacheFrom))
+		args = append(args, fmt.Sprintf("--cache-from=%s", cacheFrom))
 	}
 
 	if len(file) > 0 {
-		args = append(args, fmt.Sprintf("--file=\"%s\"", file))
+		args = append(args, fmt.Sprintf("--file=%s", file))
 	}
 
 	if len(context) == 0 {
