@@ -18,9 +18,15 @@ type BuildCommand struct {
 // Help displays help output for the command.
 func (c *BuildCommand) Help() string {
 	helpText := `
-Usage: tent build
+Usage: tent build <build_name>
 
     Build is used to build the project ready for deployment.
+
+	-deployment=
+		*Optional* The name of the deployment to run.
+
+	-build=
+		*Optional* The name of the build to run.
 
 General Options:
 
@@ -39,9 +45,12 @@ func (c *BuildCommand) Name() string { return "build" }
 // Run starts the build procedure.
 func (c *BuildCommand) Run(args []string) int {
 	var verbose bool
+	var deployment, build string
 
 	flags := flag.NewFlagSet(c.Name(), flag.ContinueOnError)
 	flags.BoolVar(&verbose, "verbose", false, "Turn on verbose output.")
+	flags.StringVar(&deployment, "deployment", "", "Optional: The name of the deployment to run.")
+	flags.StringVar(&build, "build", "", "Optional: The name of the build to run.")
 	err := flags.Parse(args)
 
 	if err != nil {
@@ -65,13 +74,19 @@ func (c *BuildCommand) Run(args []string) int {
 
 	errorCount := 0
 
-	for _, deployment := range c.Config.Deployments {
-		for key, build := range deployment.Builds {
+	for dep_name, dep := range c.Config.Deployments {
+		if len(deployment) > 0 && dep_name != deployment {
+			continue
+		}
+		for key, b := range dep.Builds {
+			if len(build) > 0 && key != build {
+				continue
+			}
 			sem <- true
 			go func(key string, build config.Build, verbose bool, errorCount *int) {
 				defer func() { <-sem }()
 				c.build(key, build, verbose, c.makeBuilder(), errorCount)
-			}(key, build, verbose, &errorCount)
+			}(key, b, verbose, &errorCount)
 		}
 	}
 

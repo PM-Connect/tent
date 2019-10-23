@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2019-10-23 [![Build Status](https://travis-ci.org/PM-Connect/tent.svg?branch=v1.4.0)](https://travis-ci.org/PM-Connect/tent)
+## Added
+- Added the ability to build specific deployments using the `-deployment=` flag on the `build` command.
+- Added the ability to build specific deployment builds using the `-build=` flag on the `build` command.
+
 ## [1.3.2] - 2019-09-16 [![Build Status](https://travis-ci.org/PM-Connect/tent.svg?branch=v1.3.2)](https://travis-ci.org/PM-Connect/tent)
 ## Fixed
 - Fixed generation of docker command to quote only build arg values to ensure correct functionality.
